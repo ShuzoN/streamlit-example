@@ -1,3 +1,4 @@
 streamlit
+streamlit-chat
 langchain
 tiktoken
