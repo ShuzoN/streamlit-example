@@ -57,6 +57,6 @@ if submitted:
   if not context_prompt_input:
     st.warning('前提を教えてください', icon='⚠')
   if submitted and openai_api_key.startswith('sk-'):
-    conv = Conversation(context_prompt_input)
+    conv = Conversation(context_prompt_input, openai_api_key)
     conversation = conv.load_conversation()
     answer = conversation.predict(input=user_message)

@@ -15,10 +15,14 @@ from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
 # Does it work?
 from langchain.callbacks.streamlit import StreamlitCallbackHandler
 
+LLM_MODEL = 'gpt-3.5-turbo-16k'
+TOKEN_LENGHT = 10240
+TEMPERATURE = 0.9
+
 class Conversation:
 
   @st.cache_resource
-  def __init__(_self, context_prompt):
+  def __init__(_self, context_prompt, openai_api_key):
 
     system_message_transcription = """
     あなたはライター兼、編集企画者です。日本語で全ての返答を返します。
@@ -40,14 +44,14 @@ class Conversation:
 
     llm = ChatOpenAI(
       streaming=True,
-      model='gpt-3.5-turbo-16k',
+      model=LLM_MODEL,
       callback_manager=AsyncCallbackManager([
         StreamlitCallbackHandler(),
         StreamingStdOutCallbackHandler()
       ]),
       verbose=True,
-      temperature=0,
-      max_tokens=10240,
+      temperature=TEMPERATURE,
+      max_tokens=TOKEN_LENGHT,
       openai_api_key=openai_api_key
     )
     memory = ConversationBufferMemory(return_messages=True)
