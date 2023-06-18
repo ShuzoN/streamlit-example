@@ -1,5 +1,6 @@
 import streamlit as st
 import re
+import math
 
 from langchain.chat_models import ChatOpenAI
 from langchain.prompts.chat import (
@@ -19,15 +20,17 @@ from langchain.callbacks.streamlit import StreamlitCallbackHandler
 LLM_MODEL = 'gpt-3.5-turbo-16k'
 TOKEN_LENGHT = 10240
 TRANSCRIPTION_TEMPERATURE = 0.0
-SUMARIZE_TEMPERATURE = 0.3
+MEMORY_TEMPERATURE = 0.3
 CHUNK_SIZE=4000
 
 
+def truncate(n):
+    return math.floor(n * 10) / 10
 
 class Conversation:
 
   @st.cache_resource
-  def __init__(_self, context_prompt, openai_api_key):
+  def __init__(_self, context_prompt, openai_api_key, transcription_temperature=TRANSCRIPTION_TEMPERATURE, memory_temperature=MEMORY_TEMPERATURE):
 
     system_message_transcription = """
     あなたはライター兼、編集企画者です。日本語で全ての返答を返します。
@@ -57,7 +60,7 @@ class Conversation:
         StreamingStdOutCallbackHandler()
       ]),
       verbose=True,
-      temperature=TRANSCRIPTION_TEMPERATURE,
+      temperature=truncate(transcription_temperature),
       max_tokens=TOKEN_LENGHT,
       openai_api_key=openai_api_key
     )
@@ -66,7 +69,7 @@ class Conversation:
     memory = ConversationSummaryMemory(
        llm=ChatOpenAI(
         model=LLM_MODEL,
-        temperature=SUMARIZE_TEMPERATURE,
+        temperature=truncate(memory_temperature),
         openai_api_key=openai_api_key),
         return_messages=True)
 
