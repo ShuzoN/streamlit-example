@@ -7,7 +7,10 @@ with st.sidebar:
   openai_api_key = st.text_input('OpenAI API Key')
   transcription_temperature= st.slider('文字起こしのtemperature', 0.0, 2.0, 0.0)
   memory_temperature = st.slider('記憶のtemperature', 0.0, 2.0, 0.3)
-
+  if st.button('上手く行かなくなったら押すボタン'):
+    st.cache_data.clear()
+    st.cache_resource.clear()
+    st.experimental_rerun()
 
 if "generated" not in st.session_state:
     st.session_state.generated = []
@@ -46,9 +49,6 @@ with st.form("編集アシスタントに質問する"):
     st.code(codeblock)
   user_message = st.text_area("編集する文章を入れてください")
   submitted = st.form_submit_button("編集する")
-
-
-
 
 if submitted:
   if not openai_api_key.startswith('sk-'):
