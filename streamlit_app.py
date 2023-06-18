@@ -51,6 +51,8 @@ with st.form("編集アシスタントに質問する"):
   submitted = st.form_submit_button("編集する")
 
 
+
+
 if submitted:
   if not openai_api_key.startswith('sk-'):
     st.warning('OpenAI API keyを入力してください', icon='⚠')
@@ -58,5 +60,4 @@ if submitted:
     st.warning('前提を教えてください', icon='⚠')
   if submitted and openai_api_key.startswith('sk-'):
     conv = Conversation(context_prompt_input, openai_api_key)
-    conversation = conv.load_conversation()
-    answer = conversation.predict(input=user_message)
+    conv.predict(user_message)
