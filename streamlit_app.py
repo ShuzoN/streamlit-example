@@ -1,10 +1,6 @@
 import streamlit as st
 from conversation import Conversation
 
-
-
-# logic
-
 st.title('文字起こし編集 with GPT')
 
 with st.sidebar:
@@ -20,11 +16,11 @@ if "past" not in st.session_state:
 
 st.write("文字起こしを口語の文章に変換することに長けています。")
 with st.form("編集アシスタントに質問する"):
+  context_prompt_input = st.text_area(label="前提となる知識を細かく書くとより高精度な文字起こしの編集が可能です。")
 
-  context_prompt_input = st.text_area('''前提となる知識を細かく書くとより高精度な文字起こしの編集が可能です。''')
-
-  codeblock = '''
-  トピック: 〇〇に関する〇〇について
+  with st.expander("前提のテンプレートはこちら"):
+    codeblock = '''
+トピック: 〇〇に関する〇〇について
   * (e.g. インターンシップSunrise2023の魅力について)
 登場人物: 
   * 〇〇である"〇〇"
@@ -46,8 +42,8 @@ with st.form("編集アシスタントに質問する"):
 〇〇(e.g.しゅーぞー): 
 ```
   * また発話者ごとに必ず改行を2つ入れ、markdownで記述してください。
-  '''
-  st.code(codeblock)
+'''
+    st.code(codeblock)
   user_message = st.text_area("編集する文章を入れてください")
   submitted = st.form_submit_button("編集する")
 
