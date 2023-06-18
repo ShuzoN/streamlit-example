@@ -1,12 +1,12 @@
 import streamlit as st
-from conversation import Conversation
+from conversation import MEMORY_TEMPERATURE, TRANSCRIPTION_TEMPERATURE, Conversation
 
 st.title('文字起こし編集 with GPT')
 
 with st.sidebar:
   openai_api_key = st.text_input('OpenAI API Key')
-  transcription_temperature= st.slider('文字起こしのtemperature', 0.0, 2.0, 0.0)
-  memory_temperature = st.slider('記憶のtemperature', 0.0, 2.0, 0.3)
+  transcription_temperature= st.slider('文字起こしのtemperature', 0.0, 2.0, TRANSCRIPTION_TEMPERATURE,step=0.1)
+  memory_temperature = st.slider('記憶のtemperature', 0.0, 2.0, MEMORY_TEMPERATURE,step=0.1)
   if st.button('上手く行かなくなったら押すボタン'):
     st.cache_data.clear()
     st.cache_resource.clear()

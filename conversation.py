@@ -24,9 +24,6 @@ MEMORY_TEMPERATURE = 0.3
 CHUNK_SIZE=4000
 
 
-def truncate(n):
-    return math.floor(n * 10) / 10
-
 class Conversation:
 
   @st.cache_resource
@@ -60,7 +57,7 @@ class Conversation:
         StreamingStdOutCallbackHandler()
       ]),
       verbose=True,
-      temperature=truncate(transcription_temperature),
+      temperature=transcription_temperature,
       max_tokens=TOKEN_LENGHT,
       openai_api_key=openai_api_key
     )
@@ -69,7 +66,7 @@ class Conversation:
     memory = ConversationSummaryMemory(
        llm=ChatOpenAI(
         model=LLM_MODEL,
-        temperature=truncate(memory_temperature),
+        temperature=memory_temperature,
         openai_api_key=openai_api_key),
         return_messages=True)
 
