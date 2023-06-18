@@ -24,7 +24,9 @@ st.title('edit with GPT')
 openai_api_key = st.sidebar.text_input('OpenAI API Key')
 
 class Conversation:
-  def __init__(self, context_prompt):
+
+  @st.cache_resource
+  def __init__(_self, context_prompt):
 
     system_message_transcription = """
     あなたはライター兼、編集企画者です。日本語で全ての返答を返します。
@@ -38,14 +40,12 @@ class Conversation:
     """.format(context=context_prompt).strip()
 
 
-    self.prompt = ChatPromptTemplate.from_messages([
+    _self.prompt = ChatPromptTemplate.from_messages([
       SystemMessagePromptTemplate.from_template(system_message_transcription),
       MessagesPlaceholder(variable_name="history"),
       HumanMessagePromptTemplate.from_template("{input}")
     ])
 
-  @st.cache_resource
-  def load_conversation(_self):
     llm = ChatOpenAI(
       streaming=True,
       model='gpt-3.5-turbo-16k',
@@ -59,12 +59,15 @@ class Conversation:
       openai_api_key=openai_api_key
     )
     memory = ConversationBufferMemory(return_messages=True)
-    conversation = ConversationChain(
+    _self.conversation = ConversationChain(
       memory=memory,
       prompt=_self.prompt,
       llm=llm
     )
-    return conversation
+
+
+  def load_conversation(_self):
+    return _self.conversation
 
 if "generated" not in st.session_state:
     st.session_state.generated = []
