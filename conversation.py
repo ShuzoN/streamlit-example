@@ -1,14 +1,9 @@
+from ChatPrompt import ChatPrompt
 import streamlit as st
 import re
 import math
 
 from langchain.chat_models import ChatOpenAI
-from langchain.prompts.chat import (
-    ChatPromptTemplate,
-    SystemMessagePromptTemplate,
-    HumanMessagePromptTemplate,
-    MessagesPlaceholder,
-)
 from langchain.memory import ConversationSummaryMemory
 from langchain.chains import ConversationChain
 from langchain.callbacks.manager import AsyncCallbackManager
@@ -40,13 +35,8 @@ class Conversation:
 
     """.format(context=context_prompt).strip()
 
-
-    _self.prompt = ChatPromptTemplate.from_messages([
-      SystemMessagePromptTemplate.from_template(system_message_transcription),
-      MessagesPlaceholder(variable_name="history"),
-      HumanMessagePromptTemplate.from_template("{input}")
-    ])
-
+    chatPrompt = ChatPrompt(system_message_transcription)
+    _self.prompt = chatPrompt.getPromptTemplate()
 
     # 文字起こしのmodel
     llm = ChatOpenAI(
