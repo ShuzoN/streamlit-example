@@ -8,13 +8,19 @@ from langchain.prompts.chat import (
 )
 
 class ChatPrompt:
-    def __init__(self, systemStaticPrompt):
-        self.systemStaticPrompt = systemStaticPrompt
-        self.prompt = ChatPromptTemplate.from_messages([
-          SystemMessagePromptTemplate.from_template(systemStaticPrompt),
+    @st.cache_resource
+    def __init__(_self, system_static, system_adaptive):
+        system_prompt = """
+        {static}
+
+        {adaptive}
+        """.format(static=system_static, adaptive=system_adaptive).strip()
+
+        _self.prompt = ChatPromptTemplate.from_messages([
+          SystemMessagePromptTemplate.from_template(system_prompt),
           MessagesPlaceholder(variable_name="history"),
           HumanMessagePromptTemplate.from_template("{input}")
         ])
 
-    def getPromptTemplate(self) -> Optional[ChatPromptTemplate]:
-        return self.prompt
+    def getPromptTemplate(_self) -> Optional[ChatPromptTemplate]:
+        return _self.prompt

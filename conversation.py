@@ -22,21 +22,7 @@ CHUNK_SIZE=4000
 class Conversation:
 
   @st.cache_resource
-  def __init__(_self, context_prompt, openai_api_key, transcription_temperature=TRANSCRIPTION_TEMPERATURE, memory_temperature=MEMORY_TEMPERATURE):
-
-    system_message_transcription = """
-    あなたはライター兼、編集企画者です。日本語で全ての返答を返します。
-    以下の文字起こしの文を口語で可読な表現にします。
-    その際、発話はまとめず個々人の発話の表現や言い回しは一切変更しないでください。
-    また、主語などの省略が起きた場合は補完を提案し保管した部分は()で括って表現してください。
-    前提となるコンテキストは以下です。ただし次の文字列`(e\.g\..+)`にマッチするものは全て無視すること。
-
-    {context}
-
-    """.format(context=context_prompt).strip()
-
-    chatPrompt = ChatPrompt(system_message_transcription)
-    _self.prompt = chatPrompt.getPromptTemplate()
+  def __init__(_self, _chatPrompt, openai_api_key, transcription_temperature=TRANSCRIPTION_TEMPERATURE, memory_temperature=MEMORY_TEMPERATURE):
 
     # 文字起こしのmodel
     llm = ChatOpenAI(
@@ -62,7 +48,7 @@ class Conversation:
 
     _self.conversation = ConversationChain(
       memory=memory,
-      prompt=_self.prompt,
+      prompt=_chatPrompt.getPromptTemplate(),
       llm=llm
     )
 

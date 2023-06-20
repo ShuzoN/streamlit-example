@@ -1,7 +1,15 @@
+from ChatPrompt import ChatPrompt
 import streamlit as st
 from conversation import MEMORY_TEMPERATURE, TRANSCRIPTION_TEMPERATURE, Conversation
 
 st.title('文字起こし編集 with GPT')
+
+system_static_prompt = """あなたはライター兼、編集企画者です。日本語で全ての返答を返します。
+    以下の文字起こしの文を口語で可読な表現にします。
+    その際、発話はまとめず個々人の発話の表現や言い回しは一切変更しないでください。
+    また、主語などの省略が起きた場合は補完を提案し保管した部分は()で括って表現してください。
+    前提となるコンテキストは以下です。ただし次の文字列`(e\.g\..+)`にマッチするものは全て無視すること。
+"""
 
 with st.sidebar:
   openai_api_key = st.text_input('OpenAI API Key')
@@ -19,7 +27,7 @@ if "past" not in st.session_state:
 
 st.write("文字起こしを口語の文章に変換することに長けています。")
 with st.form("編集アシスタントに質問する"):
-  context_prompt_input = st.text_area(label="前提となる知識を細かく書くとより高精度な文字起こしの編集が可能です。")
+  system_adaptive_prompt = st.text_area(label="前提となる知識を細かく書くとより高精度な文字起こしの編集が可能です。")
 
   with st.expander("前提のテンプレートはこちら"):
     codeblock = '''
@@ -53,8 +61,11 @@ with st.form("編集アシスタントに質問する"):
 if submitted:
   if not openai_api_key.startswith('sk-'):
     st.warning('OpenAI API keyを入力してください', icon='⚠')
-  if not context_prompt_input:
+  if not system_adaptive_prompt:
     st.warning('前提を教えてください', icon='⚠')
   if submitted and openai_api_key.startswith('sk-'):
-    conv = Conversation(context_prompt_input, openai_api_key)
+
+    chatPrompt = ChatPrompt(system_static_prompt, system_adaptive_prompt)
+    conv = Conversation(chatPrompt, openai_api_key)
+
     conv.predict(user_message)
