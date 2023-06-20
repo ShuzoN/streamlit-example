@@ -1,3 +1,4 @@
+from ChatPrompt import ChatPrompt
 from conversation import Conversation
 import streamlit as st
 
@@ -5,36 +6,43 @@ st.title('ペルソナ決め with GPT')
 
 with st.sidebar:
   openai_api_key = st.text_input('OpenAI API Key')
+  if st.button('上手く行かなくなったら押すボタン'):
+    st.cache_data.clear()
+    st.cache_resource.clear()
+    st.experimental_rerun()
 
-prompt = '''この文章を読むであろうエンジニアのペルソナを定義しその特性や特徴を書き出してください。またそのペルソナがどのような単語を好みそうかを書いてください。
+system_static_prompt = '''この文章を読むであろうエンジニアのペルソナを定義しその特性や特徴を書き出してください。またそのペルソナがどのような単語を好みそうかを書いてください。
+また、読者ペルソナを定義した後、そのペルソナを定義した理由があれば教えてください。もし、本文の意図や主張とそぐわない場合はそぐわない理由を教えてください。
+その理由を列挙した後、再度読者ペルソナを定義してください。また、そのペルソナが好みそうな単語を箇条書きで10個列挙してください。
 
-読者ペルソナ:
-
-職種: Webエンジニア (ここに領域を明記)
-経験: x~y年の経験)
-興味: エンジニアリング領域に紐づく特有のワード
-業務課題: プロジェクト、プロダクト、ビジネスに紐づく課題
-
-読者ペルソナが好みそうな単語:
-箇条書きで10個列挙する
-
+ペルソナ定義に最低限、必要な項目は以下です。
 '''
 
 with st.form("編集アシスタントに質問する"):
-  context_prompt_input = st.text_area(
-    label="前提となる知識を細かく書くとより高精度な文字起こしの編集が可能です。",
-    placeholder=prompt
+  system_adaptive_prompt = st.text_area(
+    label="ペルソナに設定する項目を教えてください。",
     )
 
-  user_message = st.text_area("編集する文章を入れてください")
-  submitted = st.form_submit_button("編集する")
+  with st.expander("ペルソナのテンプレートはこちら"):
+    codeblock = '''読者ペルソナ:
+
+職種: Webエンジニア (ここに領域を明記)
+経験: x~y年の経験(x, yにはそれぞれ数字が入る)
+興味: エンジニアリング領域に紐づく特有のワード
+業務課題: プロジェクト、プロダクト、ビジネスに紐づく課題
+'''
+    st.code(codeblock)
+
+  user_message = st.text_area("対象の文章を入れてください")
+  submitted = st.form_submit_button("ペルソナを考える")
 
 if submitted:
   if not openai_api_key.startswith('sk-'):
     st.warning('OpenAI API keyを入力してください', icon='⚠')
-  if not context_prompt_input:
+  if not system_adaptive_prompt:
     st.warning('前提を教えてください', icon='⚠')
   if submitted and openai_api_key.startswith('sk-'):
-    conv = Conversation(context_prompt_input, openai_api_key)
+    chatPrompt = ChatPrompt(system_static_prompt, system_adaptive_prompt)
+    conv = Conversation(chatPrompt, openai_api_key)
     conv.predict(user_message)
 
