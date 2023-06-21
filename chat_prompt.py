@@ -8,7 +8,6 @@ from langchain.prompts.chat import (
 )
 
 class ChatPrompt:
-    @st.cache_resource
     def __init__(_self, system_static, system_adaptive):
         system_prompt = """
         {static}

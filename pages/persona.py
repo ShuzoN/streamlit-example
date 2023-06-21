@@ -1,4 +1,4 @@
-from ChatPrompt import ChatPrompt
+from chat_prompt import ChatPrompt
 from conversation import Conversation
 import streamlit as st
 

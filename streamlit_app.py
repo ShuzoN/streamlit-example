@@ -1,4 +1,4 @@
-from ChatPrompt import ChatPrompt
+from chat_prompt import ChatPrompt
 import streamlit as st
 from conversation import MEMORY_TEMPERATURE, TRANSCRIPTION_TEMPERATURE, Conversation
 

@@ -1,4 +1,4 @@
-from ChatPrompt import ChatPrompt
+from chat_prompt import ChatPrompt
 import streamlit as st
 import re
 import math
@@ -20,8 +20,6 @@ CHUNK_SIZE=4000
 
 
 class Conversation:
-
-  @st.cache_resource
   def __init__(_self, _chatPrompt, openai_api_key, transcription_temperature=TRANSCRIPTION_TEMPERATURE, memory_temperature=MEMORY_TEMPERATURE):
 
     # 文字起こしのmodel
