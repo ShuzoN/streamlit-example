@@ -36,13 +36,16 @@ with st.form("編集アシスタントに質問する"):
   user_message = st.text_area("対象の文章を入れてください")
   submitted = st.form_submit_button("ペルソナを考える")
 
+@st.cache_resource
+def getConv(system_static_prompt, system_adaptive_prompt, openai_api_key):
+    chatPrompt = ChatPrompt(system_static_prompt, system_adaptive_prompt)
+    return Conversation(chatPrompt, openai_api_key)
+
 if submitted:
   if not openai_api_key.startswith('sk-'):
     st.warning('OpenAI API keyを入力してください', icon='⚠')
   if not system_adaptive_prompt:
     st.warning('前提を教えてください', icon='⚠')
   if submitted and openai_api_key.startswith('sk-'):
-    chatPrompt = ChatPrompt(system_static_prompt, system_adaptive_prompt)
-    conv = Conversation(chatPrompt, openai_api_key)
+    conv = getConv(system_static_prompt, system_adaptive_prompt, openai_api_key)
     conv.predict(user_message)
-
