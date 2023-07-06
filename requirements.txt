@@ -3,3 +3,4 @@ streamlit-chat
 langchain
 tiktoken
 openai
+python-dotenv
