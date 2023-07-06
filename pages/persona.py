@@ -1,11 +1,12 @@
 from chat_prompt import ChatPrompt
 from conversation import Conversation
 import streamlit as st
+import config
 
 st.title('ペルソナ決め with GPT')
 
 with st.sidebar:
-  openai_api_key = st.text_input('OpenAI API Key')
+  openai_api_key = config.getOPENAI_API_KEY()
   if st.button('上手く行かなくなったら押すボタン'):
     st.cache_data.clear()
     st.cache_resource.clear()
