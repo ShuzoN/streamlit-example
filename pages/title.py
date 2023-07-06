@@ -1,11 +1,12 @@
 from chat_prompt import ChatPrompt
 from conversation import TRANSCRIPTION_TEMPERATURE, Conversation
 import streamlit as st
+import config
 
 st.title('タイトル決め with GPT')
 
 with st.sidebar:
-  openai_api_key = st.text_input('OpenAI API Key')
+  openai_api_key = config.getOPENAI_API_KEY()
   temperature= st.slider('temperature', 0.0, 2.0, TRANSCRIPTION_TEMPERATURE,step=0.1)
   if st.button('上手く行かなくなったら押すボタン'):
     st.cache_data.clear()
