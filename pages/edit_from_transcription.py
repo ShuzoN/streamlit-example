@@ -1,5 +1,6 @@
 from chat_prompt import ChatPrompt
 import streamlit as st
+import config
 from conversation import MEMORY_TEMPERATURE, TRANSCRIPTION_TEMPERATURE, Conversation
 
 st.title('文字起こし編集 with GPT')
@@ -12,7 +13,7 @@ system_static_prompt = """あなたはライター兼、編集企画者です。
 """
 
 with st.sidebar:
-  openai_api_key = st.text_input('OpenAI API Key')
+  openai_api_key = config.getOPENAI_API_KEY()
   transcription_temperature= st.slider('文字起こしのtemperature', 0.0, 2.0, TRANSCRIPTION_TEMPERATURE,step=0.1)
   memory_temperature = st.slider('記憶のtemperature', 0.0, 2.0, MEMORY_TEMPERATURE,step=0.1)
   if st.button('上手く行かなくなったら押すボタン'):
